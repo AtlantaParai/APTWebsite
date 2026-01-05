@@ -13,7 +13,7 @@ export const instruments: Instrument[] = [
     id: '1',
     name: 'Irumbu Parai',
     type: 'Parai',
-    image: '/images/IrumbuParai.jpeg',
+    image: '/APTWebsite/images/IrumbuParai.jpeg',
     isCheckedOut: false,
     checkedOutBy: null,
     checkedOutAt: null
@@ -22,7 +22,7 @@ export const instruments: Instrument[] = [
     id: '2',
     name: 'Kombu Back',
     type: 'Kombu',
-    image: '/images/KombuBack-1.jpeg',
+    image: '/APTWebsite/images/KombuBack-1.jpeg',
     isCheckedOut: true,
     checkedOutBy: 'Ayyappan Gengadurai',
     checkedOutAt: '2024-01-15T10:30:00Z'
@@ -31,7 +31,7 @@ export const instruments: Instrument[] = [
     id: '3',
     name: 'Kombu Front',
     type: 'Kombu',
-    image: '/images/KombuFront-1.jpeg',
+    image: '/APTWebsite/images/KombuFront-1.jpeg',
     isCheckedOut: false,
     checkedOutBy: null,
     checkedOutAt: null
@@ -40,7 +40,7 @@ export const instruments: Instrument[] = [
     id: '4',
     name: 'Melam',
     type: 'Melam',
-    image: '/images/Melam.jpeg',
+    image: '/APTWebsite/images/Melam.jpeg',
     isCheckedOut: true,
     checkedOutBy: 'Anand Shanmugam',
     checkedOutAt: '2024-01-14T14:20:00Z'
@@ -49,7 +49,7 @@ export const instruments: Instrument[] = [
     id: '5',
     name: 'Pambai',
     type: 'Pambai',
-    image: '/images/Pambai.jpeg',
+    image: '/APTWebsite/images/Pambai.jpeg',
     isCheckedOut: false,
     checkedOutBy: null,
     checkedOutAt: null
@@ -58,7 +58,7 @@ export const instruments: Instrument[] = [
     id: '6',
     name: 'Sangu 1',
     type: 'Sangu',
-    image: '/images/Sangu-1.jpeg',
+    image: '/APTWebsite/images/Sangu-1.jpeg',
     isCheckedOut: true,
     checkedOutBy: 'Divya Vinoth',
     checkedOutAt: '2024-01-13T09:15:00Z'
@@ -67,7 +67,7 @@ export const instruments: Instrument[] = [
     id: '7',
     name: 'Sangu 2',
     type: 'Sangu',
-    image: '/images/Sangu-2.jpeg',
+    image: '/APTWebsite/images/Sangu-2.jpeg',
     isCheckedOut: false,
     checkedOutBy: null,
     checkedOutAt: null
@@ -76,7 +76,7 @@ export const instruments: Instrument[] = [
     id: '8',
     name: 'Sivan Kombu',
     type: 'Kombu',
-    image: '/images/SivanKombu.jpeg',
+    image: '/APTWebsite/images/SivanKombu.jpeg',
     isCheckedOut: true,
     checkedOutBy: 'Rajesh Masilamani',
     checkedOutAt: '2024-01-12T16:45:00Z'
@@ -85,7 +85,7 @@ export const instruments: Instrument[] = [
     id: '9',
     name: 'Thudumbu',
     type: 'Thudumbu',
-    image: '/images/Thudumbu-1.jpeg',
+    image: '/APTWebsite/images/Thudumbu-1.jpeg',
     isCheckedOut: false,
     checkedOutBy: null,
     checkedOutAt: null
@@ -94,7 +94,7 @@ export const instruments: Instrument[] = [
     id: '10',
     name: 'Udukkai',
     type: 'Udukkai',
-    image: '/images/Udukkai.jpeg',
+    image: '/APTWebsite/images/Udukkai.jpeg',
     isCheckedOut: false,
     checkedOutBy: null,
     checkedOutAt: null
@@ -103,7 +103,7 @@ export const instruments: Instrument[] = [
     id: '11',
     name: 'Urumi',
     type: 'Urumi',
-    image: '/images/Urumi.jpeg',
+    image: '/APTWebsite/images/Urumi.jpeg',
     isCheckedOut: true,
     checkedOutBy: 'Vijay Chakravarthy',
     checkedOutAt: '2024-01-11T11:30:00Z'
@@ -112,7 +112,7 @@ export const instruments: Instrument[] = [
     id: '12',
     name: 'Uruttu Satti',
     type: 'Uruttu Satti',
-    image: '/images/UruttuSatti.jpg',
+    image: '/APTWebsite/images/UruttuSatti.jpg',
     isCheckedOut: false,
     checkedOutBy: null,
     checkedOutAt: null
