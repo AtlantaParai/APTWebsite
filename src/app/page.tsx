@@ -19,7 +19,10 @@ export default function Home() {
     return (
       <main className="min-h-screen bg-gray-100 flex items-center justify-center">
         <div className="bg-white p-8 rounded-lg shadow-md text-center max-w-md">
-          <h1 className="text-3xl font-bold mb-6">APT Instrument Status</h1>
+          <div className="flex items-center justify-center gap-4 mb-6">
+            <img src="/images/ATPLogo.png" alt="ATP Logo" className="h-16 w-16" />
+            <h1 className="text-3xl font-bold">APT Instrument Status</h1>
+          </div>
           <p className="text-gray-600 mb-6">Sign in with Google to access the system</p>
           <button
             onClick={signInWithGoogle}
@@ -42,7 +45,10 @@ export default function Home() {
     return (
       <main className="min-h-screen bg-gray-100 flex items-center justify-center">
         <div className="bg-white p-8 rounded-lg shadow-md text-center max-w-md">
-          <h1 className="text-3xl font-bold mb-6 text-red-600">Access Denied</h1>
+          <div className="flex items-center justify-center gap-4 mb-6">
+            <img src="/images/ATPLogo.png" alt="ATP Logo" className="h-16 w-16" />
+            <h1 className="text-3xl font-bold text-red-600">Access Denied</h1>
+          </div>
           <p className="text-gray-600 mb-4">Your account ({user.email}) is not authorized to access this system.</p>
           <p className="text-gray-500 mb-6 text-sm">Please contact an administrator for access.</p>
           <button
@@ -60,7 +66,10 @@ export default function Home() {
     <main className="min-h-screen bg-gray-100">
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-          <h1 className="text-xl font-semibold">Welcome, {user.displayName}</h1>
+          <div className="flex items-center gap-4">
+            <img src="/images/ATPLogo.png" alt="ATP Logo" className="h-12 w-12" />
+            <h1 className="text-xl font-semibold">Welcome, {user.displayName}</h1>
+          </div>
           <button
             onClick={logout}
             className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors"
