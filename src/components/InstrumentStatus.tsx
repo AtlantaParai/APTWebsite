@@ -218,7 +218,7 @@ export default function InstrumentStatus({ initialInstruments }: InstrumentStatu
               )}
             </div>
           </div>
-        ))}}
+        ))}
       </div>
 
       {selectedInstrument && (
@@ -234,7 +234,6 @@ export default function InstrumentStatus({ initialInstruments }: InstrumentStatu
                 }}
                 className="bg-red-500 text-white w-5 h-5 rounded-full flex items-center justify-center text-xs"
               >
-                ×
               </button>
             </div>
             
