@@ -34,8 +34,13 @@ export default function FinanceTracker() {
   };
 
   useEffect(() => {
-    GoogleOAuthService.initialize().then(() => {
+    GoogleOAuthService.initialize().then(async () => {
       setOauthReady(true);
+      // Trigger OAuth flow immediately if no token exists
+      const token = await GoogleOAuthService.getAccessToken();
+      if (token) {
+        loadPaymentStatus();
+      }
     });
   }, []);
 
