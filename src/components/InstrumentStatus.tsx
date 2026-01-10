@@ -53,45 +53,34 @@ export default function InstrumentStatus({ initialInstruments }: InstrumentStatu
   const loadInstrumentsFromFirebase = async () => {
     try {
       setLoading(true);
-      const firebaseInstruments = await FirebaseService.getAllInstruments();
       
-      // If Firebase is empty or has fewer instruments, sync from local data
-      if (firebaseInstruments.length < initialInstruments.length) {
-        console.log('Syncing instruments to Firebase...');
-        for (const instrument of initialInstruments) {
-          await FirebaseService.addInstrument({
-            id: instrument.id,
-            name: instrument.name,
-            type: instrument.type,
-            image: instrument.image,
-            status: 'available',
-            checkedOutBy: null
-          });
-        }
-        // Reload after sync
-        const updatedInstruments = await FirebaseService.getAllInstruments();
-        const mappedInstruments = updatedInstruments.map((firebase: any) => ({
-          id: firebase.id,
-          name: firebase.name,
-          type: firebase.type,
-          image: firebase.image,
-          isCheckedOut: firebase.status === 'checked_out',
-          checkedOutBy: firebase.checkedOutBy,
-          checkedOutAt: firebase.updatedAt
-        }));
-        setInstruments(mappedInstruments);
-      } else {
-        const mappedInstruments = firebaseInstruments.map((firebase: any) => ({
-          id: firebase.id,
-          name: firebase.name,
-          type: firebase.type,
-          image: firebase.image,
-          isCheckedOut: firebase.status === 'checked_out',
-          checkedOutBy: firebase.checkedOutBy,
-          checkedOutAt: firebase.updatedAt
-        }));
-        setInstruments(mappedInstruments);
+      // Force clear and reload all instruments with correct image paths
+      console.log('Clearing and reloading all instruments...');
+      await FirebaseService.clearAllInstruments();
+      
+      for (const instrument of initialInstruments) {
+        await FirebaseService.addInstrument({
+          id: instrument.id,
+          name: instrument.name,
+          type: instrument.type,
+          image: instrument.image,
+          status: 'available',
+          checkedOutBy: null
+        });
       }
+      
+      // Load the fresh data
+      const firebaseInstruments = await FirebaseService.getAllInstruments();
+      const mappedInstruments = firebaseInstruments.map((firebase: any) => ({
+        id: firebase.id,
+        name: firebase.name,
+        type: firebase.type,
+        image: firebase.image,
+        isCheckedOut: firebase.status === 'checked_out',
+        checkedOutBy: firebase.checkedOutBy,
+        checkedOutAt: firebase.updatedAt
+      }));
+      setInstruments(mappedInstruments);
     } catch (error) {
       console.error('Failed to load from Firebase:', error);
     } finally {

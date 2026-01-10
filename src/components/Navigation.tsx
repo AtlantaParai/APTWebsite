@@ -42,7 +42,7 @@ export default function Navigation() {
             <span className="text-sm text-gray-600">Welcome, {user?.displayName}</span>
             <button
               onClick={logout}
-              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition-colors text-sm"
+              className="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-md transition-colors text-sm"
             >
               Sign Out
             </button>
