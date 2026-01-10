@@ -1,18 +1,35 @@
 export const authorizedUsers = [
   'ayyapps4u@gmail.com',
   'ipan85@gmail.com',
-  'divya@example.com',
-  'rajesh@example.com',
-  'vijay@example.com'
+  'Divyaavino@gmail.com',
+  'Bhuvanabuzzy@gmail.com',
+  'sendabi@gmail.com',
+  'sapmasi@gmail.com',
+  'ramvijaianand@gmail.com',
+  'Jeyaraj.L@gmail.com',
+  'Amarjyotiangan@gmail.com',
+  'dhaneshrajathurai@gmail.com',
+  'Anbu.madhu@gmail.com',
+  'chandruxg@gmail.com',
+  'Visha.chandy@gmail.com',
+  'fullbellyvrc@gmail.com'
 ];
 
 export const attendanceUsers = [
-  'ipan85@gmail.com'
+  'ipan85@gmail.com',
+  'Visha.chandy@gmail.com',
+  'chandruxg@gmail.com',
+  'Anbu.madhu@gmail.com',
+  'sapmasi@gmail.com'
   // Add more emails here for users who should see attendance tab
 ];
 
 export const financeUsers = [
-  'ayyapps4u@gmail.com'
+  'ayyapps4u@gmail.com',
+  'ipan85@gmail.com',
+  'sapmasi@gmail.com',
+  'Jeyaraj.L@gmail.com',
+  'Chitty.anand@gmail.com'
   // Add more emails here for users who should see finance tab
 ];
 

@@ -25,16 +25,44 @@ export default function InstrumentStatus({ initialInstruments }: InstrumentStatu
     try {
       setLoading(true);
       const firebaseInstruments = await FirebaseService.getAllInstruments();
-      const mappedInstruments = firebaseInstruments.map((firebase: any) => ({
-        id: firebase.id,
-        name: firebase.name,
-        type: firebase.type,
-        image: firebase.image,
-        isCheckedOut: firebase.status === 'checked_out',
-        checkedOutBy: firebase.checkedOutBy,
-        checkedOutAt: firebase.updatedAt
-      }));
-      setInstruments(mappedInstruments);
+      
+      // If Firebase is empty or has fewer instruments, sync from local data
+      if (firebaseInstruments.length < initialInstruments.length) {
+        console.log('Syncing instruments to Firebase...');
+        for (const instrument of initialInstruments) {
+          await FirebaseService.addInstrument({
+            id: instrument.id,
+            name: instrument.name,
+            type: instrument.type,
+            image: instrument.image,
+            status: 'available',
+            checkedOutBy: null
+          });
+        }
+        // Reload after sync
+        const updatedInstruments = await FirebaseService.getAllInstruments();
+        const mappedInstruments = updatedInstruments.map((firebase: any) => ({
+          id: firebase.id,
+          name: firebase.name,
+          type: firebase.type,
+          image: firebase.image,
+          isCheckedOut: firebase.status === 'checked_out',
+          checkedOutBy: firebase.checkedOutBy,
+          checkedOutAt: firebase.updatedAt
+        }));
+        setInstruments(mappedInstruments);
+      } else {
+        const mappedInstruments = firebaseInstruments.map((firebase: any) => ({
+          id: firebase.id,
+          name: firebase.name,
+          type: firebase.type,
+          image: firebase.image,
+          isCheckedOut: firebase.status === 'checked_out',
+          checkedOutBy: firebase.checkedOutBy,
+          checkedOutAt: firebase.updatedAt
+        }));
+        setInstruments(mappedInstruments);
+      }
     } catch (error) {
       console.error('Failed to load from Firebase:', error);
     } finally {
@@ -232,8 +260,9 @@ export default function InstrumentStatus({ initialInstruments }: InstrumentStatu
                   setSearchQuery('');
                   setFilteredMembers([]);
                 }}
-                className="bg-red-500 text-white w-5 h-5 rounded-full flex items-center justify-center text-xs"
+                className="bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs hover:bg-red-600"
               >
+                ×
               </button>
             </div>
             

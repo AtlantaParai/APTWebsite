@@ -9,63 +9,68 @@ export default function Navigation() {
   const pathname = usePathname();
   const { user, logout } = useAuth();
 
-  console.log('Current pathname:', pathname); // Debug log
-
-  const tabs = [
+  const navItems = [
     { name: 'Instruments', path: '/', icon: '🎵' },
     ...(hasAttendanceAccess(user?.email || null) ? [{ name: 'Attendance', path: '/attendance', icon: '📋' }] : []),
     ...(hasFinanceAccess(user?.email || null) ? [{ name: 'Finance', path: '/finance', icon: '💰' }] : [])
   ];
 
-  // Helper function to check if current path matches tab path
-  const isActive = (tabPath: string) => {
-    if (tabPath === '/') {
+  const isActive = (itemPath: string) => {
+    if (itemPath === '/') {
       return pathname === '/' || pathname === '';
     }
-    return pathname.startsWith(tabPath);
+    return pathname.startsWith(itemPath);
   };
 
   return (
-    <div className="bg-white shadow-sm border-b">
-      <div className="max-w-6xl mx-auto px-6 py-4">
-        <div className="flex justify-between items-center mb-4">
+    <header className="bg-white shadow-md border-b">
+      {/* Top Header */}
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="flex justify-between items-center h-16">
+          {/* Logo and Title */}
           <div className="flex items-center gap-4">
             <img 
               src={process.env.NODE_ENV === 'production' ? '/APTWebsite/images/ATPLogo.png' : '/images/ATPLogo.png'} 
               alt="ATP Logo" 
-              className="h-12 w-12" 
+              className="h-10 w-10" 
             />
             <h1 className="text-xl font-bold text-gray-800">Atlanta Parai Team</h1>
           </div>
+          
+          {/* User Info and Logout */}
           <div className="flex items-center gap-4">
-            <span className="text-xs text-gray-600">Welcome, {user?.displayName}</span>
+            <span className="text-sm text-gray-600">Welcome, {user?.displayName}</span>
             <button
               onClick={logout}
-              className="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg transition-colors text-sm"
+              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition-colors text-sm"
             >
               Sign Out
             </button>
           </div>
         </div>
-        
-        {/* Tab Navigation */}
-        <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg">
-          {tabs.map((tab) => (
-            <Link
-              key={tab.path}
-              href={tab.path}
-              className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-md font-medium transition-all duration-200 text-sm ${
-                isActive(tab.path)
-                  ? 'bg-red-600 text-white shadow-lg'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-              }`}
-            >
-              <span className="text-base">{tab.icon}</span>
-              <span>{tab.name}</span>
-            </Link>
-          ))}
+      </div>
+      
+      {/* Navigation Bar */}
+      <div className="bg-gray-50 border-t">
+        <div className="max-w-6xl mx-auto px-6">
+          <nav className="flex space-x-8">
+            {navItems.map((item) => (
+              <Link
+                key={item.path}
+                href={item.path}
+                className={`flex items-center gap-2 px-4 py-3 font-medium transition-colors text-sm border-b-2 ${
+                  isActive(item.path)
+                    ? 'text-red-600 border-red-600 bg-white'
+                    : 'text-gray-600 hover:text-red-600 border-transparent hover:border-gray-300'
+                }`}
+              >
+                <span>{item.icon}</span>
+                <span>{item.name}</span>
+              </Link>
+            ))}
+          </nav>
         </div>
       </div>
-    </div>
+    </header>
   );
 }

@@ -13,8 +13,7 @@ export class GoogleSheetsService {
       data.section,
       data.memberName,
       data.status,
-      data.recordedBy,
-      new Date().toISOString()
+      data.recordedBy
     ]];
 
     const response = await fetch(
@@ -57,6 +56,33 @@ export class GoogleSheetsService {
     return rows.filter((row: string[]) => 
       row[0] === today && row[1] === section
     ).map((row: string[]) => ({
+      date: row[0],
+      section: row[1],
+      memberName: row[2],
+      status: row[3],
+      recordedBy: row[4],
+      timestamp: row[5]
+    }));
+  }
+
+  static async getAllAttendanceData(accessToken: string) {
+    const response = await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${this.SHEET_ID}/values/Attendance`,
+      {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+        }
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch attendance: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const rows = data.values || [];
+    
+    return rows.slice(1).map((row: string[]) => ({
       date: row[0],
       section: row[1],
       memberName: row[2],
