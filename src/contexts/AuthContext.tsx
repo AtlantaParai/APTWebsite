@@ -21,18 +21,9 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [debugInfo, setDebugInfo] = useState<string[]>([]);
-
-  const addDebug = (message: string) => {
-    console.log(message);
-    setDebugInfo(prev => [...prev.slice(-4), `${new Date().toLocaleTimeString()}: ${message}`]);
-  };
 
   useEffect(() => {
-    addDebug('AuthProvider mounted - starting auth check');
-    
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      addDebug(`Auth state changed: ${user?.email || 'No user'}`);
       setUser(user);
       setLoading(false);
     });
@@ -42,12 +33,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const signInWithGoogle = async () => {
     try {
-      addDebug('Starting popup sign-in');
+      setLoading(true);
       const result = await signInWithPopup(auth, googleProvider);
-      addDebug(`Sign-in successful: ${result.user.email}`);
+      console.log('Sign-in successful:', result.user.email);
+      // Don't set loading to false here - let onAuthStateChanged handle it
     } catch (error: any) {
-      addDebug(`Sign-in failed: ${error.code} - ${error.message}`);
-      alert(`Sign-in failed: ${error.message}`);
+      console.error('Sign-in failed:', error.code, error.message);
+      setLoading(false);
+      if (error.code !== 'auth/popup-closed-by-user') {
+        alert(`Sign-in failed: ${error.message}`);
+      }
     }
   };
 
@@ -100,13 +95,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       getAccessToken
     }}>
       {children}
-      {/* Debug info for mobile - always show */}
-      <div className="fixed bottom-0 left-0 right-0 bg-black text-white text-xs p-2 z-50 max-h-32 overflow-y-auto">
-        <div>Debug Panel Active</div>
-        {debugInfo.map((info, i) => (
-          <div key={i}>{info}</div>
-        ))}
-      </div>
     </AuthContext.Provider>
   );
 };
