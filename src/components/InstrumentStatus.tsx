@@ -23,15 +23,13 @@ export default function InstrumentStatus({ initialInstruments }: InstrumentStatu
   useEffect(() => {
     loadInstrumentsFromFirebase();
     
-    // Refresh data when page becomes visible (tab switching)
-    const handleVisibilityChange = () => {
-      if (!document.hidden) {
-        console.log('Page became visible, refreshing instruments...');
-        loadInstrumentsFromFirebase();
-      }
+    // Refresh data when window gets focus (tab switching back)
+    const handleFocus = () => {
+      console.log('Window focused, refreshing instruments...');
+      loadInstrumentsFromFirebase();
     };
     
-    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('focus', handleFocus);
     
     // Pull-to-refresh functionality
     let startY = 0;
@@ -58,7 +56,7 @@ export default function InstrumentStatus({ initialInstruments }: InstrumentStatu
     document.addEventListener('touchmove', handleTouchMove);
     
     return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('focus', handleFocus);
       document.removeEventListener('touchstart', handleTouchStart);
       document.removeEventListener('touchmove', handleTouchMove);
     };
