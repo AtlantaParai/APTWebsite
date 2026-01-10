@@ -65,6 +65,22 @@ export class GoogleOAuthService {
       }
     }
 
+    // Try to get token from Firebase auth first
+    try {
+      const { auth } = await import('@/lib/firebase');
+      const user = auth.currentUser;
+      if (user) {
+        const credential = await user.getIdTokenResult();
+        // Check if user has Google Sheets scope
+        if (credential.claims.firebase && credential.claims.firebase.sign_in_provider === 'google.com') {
+          // For now, we'll still need the separate OAuth flow for Sheets API
+          // Firebase ID tokens don't work directly with Google APIs
+        }
+      }
+    } catch (error) {
+      console.log('Could not get Firebase user token');
+    }
+
     // Prevent multiple simultaneous authentication attempts
     if (this.isAuthenticating) {
       return null;
