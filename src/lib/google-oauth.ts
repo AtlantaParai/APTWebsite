@@ -70,9 +70,15 @@ export class GoogleOAuthService {
       return null;
     }
 
+    // Ensure we're initialized first
+    if (!this.tokenClient) {
+      await this.initialize();
+    }
+
     // No token found, need to request one
     return new Promise((resolve) => {
       if (!this.tokenClient) {
+        console.error('Token client still not available after initialization');
         resolve(null);
         return;
       }
@@ -94,6 +100,7 @@ export class GoogleOAuthService {
         this.tokenClient.callback = originalCallback;
       };
 
+      console.log('Requesting Google OAuth token...');
       this.tokenClient.requestAccessToken();
     });
   }
