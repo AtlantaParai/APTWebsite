@@ -11,7 +11,7 @@ export default function Navigation() {
 
   const navItems = [
     ...(hasAttendanceAccess(user?.email || null) ? [{ name: 'Attendance', path: '/attendance', icon: '📋' }] : []),
-    { name: 'Instruments', path: '/', icon: '🎵' },
+    { name: 'Instruments', path: '/instruments', icon: '🎵' },
     ...(hasFinanceAccess(user?.email || null) ? [{ name: 'Finance', path: '/finance', icon: '💰' }] : [])
   ];
 

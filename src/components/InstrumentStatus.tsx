@@ -35,8 +35,8 @@ export default function InstrumentStatus({ initialInstruments }: InstrumentStatu
       setLoading(true);
       console.log('Loading instruments from sheets...');
       
-      const { GoogleSignInService } = await import('@/lib/google-signin');
-      const accessToken = GoogleSignInService.getAccessToken();
+      const { GoogleOAuthService } = await import('@/lib/google-oauth');
+      const accessToken = await GoogleOAuthService.getAccessToken();
       console.log('Google Sheets token available:', !!accessToken);
       setDebugMessage(`Token available: ${!!accessToken}`);
       
@@ -143,8 +143,8 @@ export default function InstrumentStatus({ initialInstruments }: InstrumentStatu
     try {
       setLoading(true);
       console.log('Force updating Google Sheets...');
-      const { GoogleSignInService } = await import('@/lib/google-signin');
-      const accessToken = GoogleSignInService.getAccessToken();
+      const { GoogleOAuthService } = await import('@/lib/google-oauth');
+      const accessToken = await GoogleOAuthService.getAccessToken();
       if (!accessToken) {
         console.error('No access token available');
         return;
@@ -180,8 +180,8 @@ export default function InstrumentStatus({ initialInstruments }: InstrumentStatu
     
     try {
       setLoading(true);
-      const { GoogleSignInService } = await import('@/lib/google-signin');
-      const accessToken = GoogleSignInService.getAccessToken();
+      const { GoogleOAuthService } = await import('@/lib/google-oauth');
+      const accessToken = await GoogleOAuthService.getAccessToken();
       
       if (!accessToken) {
         console.error('No access token available');
@@ -221,8 +221,8 @@ export default function InstrumentStatus({ initialInstruments }: InstrumentStatu
   const handleCheckIn = async (instrument: Instrument) => {
     try {
       setLoading(true);
-      const { GoogleSignInService } = await import('@/lib/google-signin');
-      const accessToken = GoogleSignInService.getAccessToken();
+      const { GoogleOAuthService } = await import('@/lib/google-oauth');
+      const accessToken = await GoogleOAuthService.getAccessToken();
       
       if (!accessToken) {
         console.error('No access token available');

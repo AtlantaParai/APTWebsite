@@ -31,49 +31,46 @@ export class GoogleSignInService {
   }
 
   private static setupSignIn() {
-    // Setup ID token for user info
-    window.google.accounts.id.initialize({
-      client_id: this.CLIENT_ID,
-      callback: this.handleCredentialResponse.bind(this),
-    });
-    
-    // Setup OAuth token client for Sheets access
+    // Setup OAuth token client for Sheets access (includes user info)
     this.tokenClient = window.google.accounts.oauth2.initTokenClient({
       client_id: this.CLIENT_ID,
-      scope: this.SCOPES,
+      scope: this.SCOPES + ' openid email profile',
       callback: (response: any) => {
         if (response.access_token) {
           this.accessToken = response.access_token;
           localStorage.setItem('google_access_token', response.access_token);
           localStorage.setItem('google_sheets_token', response.access_token);
+          
+          // Get user info from the access token
+          this.getUserInfo(response.access_token);
         }
       },
     });
   }
 
-  private static handleCredentialResponse(response: any) {
-    if (this.isProcessingSignIn) {
-      console.log('Already processing sign-in, skipping...');
-      return;
+  private static async getUserInfo(accessToken: string) {
+    try {
+      const response = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`
+        }
+      });
+      const userInfo = await response.json();
+      
+      this.user = {
+        email: userInfo.email,
+        name: userInfo.name,
+        picture: userInfo.picture,
+      };
+      
+      localStorage.setItem('google_user', JSON.stringify(this.user));
+      
+      // Redirect after getting user info
+      const basePath = process.env.NODE_ENV === 'production' ? '/APTWebsite' : '';
+      window.location.href = `${basePath}/attendance`;
+    } catch (error) {
+      console.error('Failed to get user info:', error);
     }
-    
-    this.isProcessingSignIn = true;
-    
-    // Decode JWT token
-    const payload = JSON.parse(atob(response.credential.split('.')[1]));
-    this.user = {
-      email: payload.email,
-      name: payload.name,
-      picture: payload.picture,
-    };
-    
-    // Store user in localStorage
-    localStorage.setItem('google_user', JSON.stringify(this.user));
-    
-    // Reset flag and redirect to attendance tab
-    this.isProcessingSignIn = false;
-    const basePath = process.env.NODE_ENV === 'production' ? '/APTWebsite' : '';
-    window.location.href = `${basePath}/attendance`;
   }
 
   static async signIn() {
@@ -81,30 +78,8 @@ export class GoogleSignInService {
       await this.initialize();
     }
     
-    // Use renderButton instead of prompt for better Safari compatibility
-    const buttonContainer = document.createElement('div');
-    buttonContainer.id = 'google-signin-button';
-    document.body.appendChild(buttonContainer);
-    
-    window.google.accounts.id.renderButton(
-      buttonContainer,
-      {
-        theme: 'outline',
-        size: 'large',
-        type: 'standard',
-        text: 'signin_with',
-        shape: 'rectangular',
-        logo_alignment: 'left'
-      }
-    );
-    
-    // Trigger click programmatically
-    setTimeout(() => {
-      const button = buttonContainer.querySelector('div[role="button"]') as HTMLElement;
-      if (button) {
-        button.click();
-      }
-    }, 100);
+    // Use OAuth flow directly to get both user info and Sheets access
+    this.tokenClient.requestAccessToken();
   }
 
   static signOut() {

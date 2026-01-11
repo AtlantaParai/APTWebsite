@@ -1,0 +1,168 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { GoogleSignInService } from '@/lib/google-signin';
+import { useAuth } from '@/contexts/AuthContext';
+
+export default function HomePage() {
+  const router = useRouter();
+  const { user } = useAuth();
+  const [isSigningIn, setIsSigningIn] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const heroImages = [
+    'TTS-Header-1-1280x720.jpg',
+    'ParaiDance.jpeg',
+    'ParaiHeat.jpeg',
+    'TTS-Header-2-1280x720.jpg', 
+    'TTS-Header-3-1280x720.jpg'
+  ];
+
+  const getImagePairs = () => {
+    const pairs = [];
+    for (let i = 0; i < heroImages.length; i += 2) {
+      pairs.push(heroImages.slice(i, i + 2));
+    }
+    return pairs;
+  };
+
+  const imagePairs = getImagePairs();
+
+  useEffect(() => {
+    GoogleSignInService.initialize();
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
+    }, 2000);
+    return () => clearInterval(interval);
+  }, [heroImages.length]);
+
+  const handleConnectToSheets = async () => {
+    setIsSigningIn(true);
+    try {
+      await GoogleSignInService.signIn();
+      // Sign-in service will handle redirect to attendance tab
+    } catch (error) {
+      console.error('Sign in failed:', error);
+      setIsSigningIn(false);
+    }
+  };
+
+  const basePath = process.env.NODE_ENV === 'production' ? '/APTWebsite' : '';
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50">
+      {/* Header */}
+      <div className="bg-white shadow-sm">
+        <div className="max-w-6xl mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <img 
+                src={`${basePath}/images/ATPLogo.png`} 
+                alt="Atlanta Parai Team" 
+                className="h-16 w-auto"
+              />
+              <div className="ml-4">
+                <h1 className="text-2xl font-bold text-red-600">Atlanta Parai Team</h1>
+                <p className="text-gray-600">Preserving Tamil Culture Through Music</p>
+              </div>
+            </div>
+            <button
+              onClick={handleConnectToSheets}
+              disabled={isSigningIn}
+              className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors disabled:opacity-50 text-sm"
+            >
+              {isSigningIn ? 'Connecting...' : 'Admin Login'}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Hero Section */}
+      <div className="w-full px-4 py-8">
+        <div className="mb-8">
+          <h2 className="text-3xl font-bold text-gray-800 mb-4 text-center">Welcome to Our Musical Journey</h2>
+          <p className="text-gray-600 mb-4 text-center max-w-4xl mx-auto">
+            The Atlanta Parai Team is dedicated to preserving and promoting the rich musical heritage of Tamil culture. 
+            Parai, one of the oldest percussion instruments in Tamil tradition, carries the heartbeat of our ancestors 
+            and continues to resonate through generations.
+          </p>
+          <p className="text-gray-600 mb-6 text-center max-w-4xl mx-auto">
+            Our team brings together passionate musicians who celebrate Tamil culture through traditional Parai performances, 
+            cultural events, and community gatherings. We believe in keeping our heritage alive while sharing its beauty 
+            with the world.
+          </p>
+        </div>
+        
+        <div className="w-full">
+          <img 
+            src={`${basePath}/images/${heroImages[currentImageIndex]}`} 
+            alt="Tamil Culture and Parai Performance" 
+            className="w-full h-96 object-cover rounded-lg shadow-lg"
+          />
+        </div>
+
+        {/* Instruments Gallery */}
+        <div className="max-w-7xl mx-auto mb-12">
+          <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">Our Traditional Instruments</h3>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {[
+              { name: 'Melam', image: 'Melam.jpeg' },
+              { name: 'Chinna Melam', image: 'Chinna Melam.jpeg' },
+              { name: 'Pambai', image: 'Pambai.jpeg' },
+              { name: 'Thudumbu', image: 'Thudumbu(Red).jpeg' },
+              { name: 'Urumi', image: 'Urumi.jpeg' },
+              { name: 'Udukkai', image: 'Udukkai.jpeg' },
+              { name: 'Jaalra', image: 'Jaalra.jpeg' },
+              { name: 'Sangu', image: 'Sangu-1.jpeg' },
+              { name: 'Kombu', image: 'KombuFront-1.jpeg' },
+              { name: 'Sivan Kombu', image: 'SivanKombu.jpeg' },
+              { name: 'Uruttu Satti', image: 'Uruttu Satti.jpeg' },
+              { name: 'Valli Kummi', image: 'ValliKummi-Chaplangattai.jpeg' }
+            ].map((instrument, index) => (
+              <div key={index} className="bg-white rounded-lg shadow-md p-4 text-center">
+                <img 
+                  src={`${basePath}/images/${instrument.image}`} 
+                  alt={instrument.name}
+                  className="w-full h-32 object-cover rounded-md mb-3"
+                />
+                <p className="text-sm font-medium text-gray-700">{instrument.name}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* About Parai Culture */}
+        <div className="max-w-7xl mx-auto bg-white rounded-lg shadow-md p-6 mb-8">
+          <h3 className="text-2xl font-bold text-gray-800 mb-4">The Art of Parai</h3>
+          <div className="grid md:grid-cols-2 gap-6 items-center">
+            <div>
+              <p className="text-gray-600 mb-4">
+                Parai is more than just a musical instrument – it's a symbol of Tamil identity and cultural pride. 
+                Traditionally made from cow hide stretched over a wooden frame, the Parai produces deep, resonant sounds 
+                that can be heard from great distances.
+              </p>
+              <p className="text-gray-600 mb-4">
+                In ancient Tamil society, Parai was used for various purposes: announcing important news, 
+                celebrating victories, marking festivals, and accompanying folk dances. The rhythmic patterns 
+                and beats tell stories of our ancestors and their way of life.
+              </p>
+              <p className="text-gray-600">
+                Today, we continue this tradition by teaching the younger generation, performing at cultural events, 
+                and ensuring that the art of Parai remains vibrant in the Tamil diaspora community.
+              </p>
+            </div>
+            <img 
+              src={`${basePath}/images/Tamil_Culture.jpg`} 
+              alt="Tamil Culture and Parai Art" 
+              className="rounded-lg shadow-md"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

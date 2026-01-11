@@ -153,8 +153,7 @@ export default function AttendanceTracker() {
   const loadTodayAttendance = async () => {
     try {
       setLoading(true);
-      const { GoogleSignInService } = await import('@/lib/google-signin');
-      const accessToken = GoogleSignInService.getAccessToken();
+      const accessToken = await GoogleOAuthService.getAccessToken();
       if (!accessToken) {
         console.log('No access token - user needs to sign in');
         return;
