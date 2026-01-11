@@ -60,11 +60,14 @@ export default function InstrumentStatus({ initialInstruments }: InstrumentStatu
       }
       
       console.log('Initializing instruments sheet...');
+      setDebugMessage('Initializing sheet...');
       await InstrumentsSheetsService.initializeInstruments(initialInstruments, accessToken);
       
       console.log('Loading instruments from Google Sheets...');
+      setDebugMessage('Loading from sheets...');
       const sheetsInstruments = await InstrumentsSheetsService.getAllInstruments(accessToken);
       console.log('Sheets instruments found:', sheetsInstruments.length, sheetsInstruments);
+      setDebugMessage(`Found ${sheetsInstruments.length} instruments in sheet`);
       
       const mappedInstruments = sheetsInstruments.map((sheet: any) => ({
         id: sheet.id,
@@ -77,6 +80,7 @@ export default function InstrumentStatus({ initialInstruments }: InstrumentStatu
       }));
       console.log('Mapped instruments:', mappedInstruments);
       setInstruments(mappedInstruments);
+      setDebugMessage(`Loaded ${mappedInstruments.length} instruments successfully`);
     } catch (error) {
       console.error('Failed to load from Google Sheets:', error);
     } finally {
