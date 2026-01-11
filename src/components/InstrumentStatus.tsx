@@ -46,10 +46,6 @@ export default function InstrumentStatus({ initialInstruments }: InstrumentStatu
         return;
       }
       
-      console.log('Initializing instruments sheet...');
-      setDebugMessage('Initializing sheet...');
-      await InstrumentsSheetsService.initializeInstruments(initialInstruments, accessToken);
-      
       console.log('Loading instruments from Google Sheets...');
       setDebugMessage('Loading from sheets...');
       const sheetsInstruments = await InstrumentsSheetsService.getAllInstruments(accessToken);
