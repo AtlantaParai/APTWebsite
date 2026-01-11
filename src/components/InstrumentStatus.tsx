@@ -22,6 +22,7 @@ export default function InstrumentStatus({ initialInstruments }: InstrumentStatu
   const [filteredMembers, setFilteredMembers] = useState<Member[]>([]);
   const [loading, setLoading] = useState(false);
   const [showForceUpdate, setShowForceUpdate] = useState(false);
+  const [debugMessage, setDebugMessage] = useState('');
 
   // Refresh when switching tabs
   const handleTabChange = (tab: 'available' | 'checkedOut') => {
@@ -36,20 +37,25 @@ export default function InstrumentStatus({ initialInstruments }: InstrumentStatu
       
       let accessToken = localStorage.getItem('google_sheets_token');
       console.log('Google Sheets token available:', !!accessToken);
+      setDebugMessage(`Token available: ${!!accessToken}`);
       
       if (!accessToken && user) {
         console.log('User signed in but no Sheets token, requesting permission...');
+        setDebugMessage('Requesting Sheets permission...');
         const { GoogleOAuthService } = await import('@/lib/google-oauth');
         try {
           accessToken = await GoogleOAuthService.getAccessToken();
           console.log('Got Sheets access token:', !!accessToken);
+          setDebugMessage(`Got token: ${!!accessToken}`);
         } catch (error) {
           console.error('Failed to get Sheets token:', error);
+          setDebugMessage('Failed to get token');
         }
       }
       
       if (!accessToken) {
         console.log('No access token available - user needs to sign in with Sheets permission');
+        setDebugMessage('No token - need Sheets permission');
         return;
       }
       
@@ -281,6 +287,11 @@ export default function InstrumentStatus({ initialInstruments }: InstrumentStatu
         <div className="text-center mb-2">
           <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
           <p className="text-sm text-gray-600 mt-1">Loading instruments...</p>
+        </div>
+      )}
+      {debugMessage && (
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-2 mb-2 text-center">
+          <p className="text-sm text-blue-800">Debug: {debugMessage}</p>
         </div>
       )}
       <div className="bg-white rounded-lg shadow-md p-2 mb-2">
