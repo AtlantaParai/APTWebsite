@@ -23,6 +23,7 @@ export default function InstrumentStatus({ initialInstruments }: InstrumentStatu
   const [loading, setLoading] = useState(false);
   const [showForceUpdate, setShowForceUpdate] = useState(false);
   const [debugMessage, setDebugMessage] = useState('');
+  const [oauthInitialized, setOauthInitialized] = useState(false);
 
   // Refresh when switching tabs
   const handleTabChange = (tab: 'available' | 'checkedOut') => {
@@ -96,8 +97,22 @@ export default function InstrumentStatus({ initialInstruments }: InstrumentStatu
   }, [initialInstruments, user]);
 
   useEffect(() => {
-    loadInstrumentsFromSheets();
-  }, [loadInstrumentsFromSheets]);
+    if (!oauthInitialized) {
+      setOauthInitialized(true);
+      const initOAuth = async () => {
+        const { GoogleOAuthService } = await import('@/lib/google-oauth');
+        await GoogleOAuthService.initialize();
+        loadInstrumentsFromSheets();
+      };
+      initOAuth();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (oauthInitialized) {
+      loadInstrumentsFromSheets();
+    }
+  }, [loadInstrumentsFromSheets, oauthInitialized]);
 
   useEffect(() => {
     // Refresh data when window gets focus (tab switching back)
