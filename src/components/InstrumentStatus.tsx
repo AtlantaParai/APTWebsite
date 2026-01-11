@@ -24,6 +24,7 @@ export default function InstrumentStatus({ initialInstruments }: InstrumentStatu
   const [showForceUpdate, setShowForceUpdate] = useState(false);
   const [debugMessage, setDebugMessage] = useState('');
   const [oauthInitialized, setOauthInitialized] = useState(false);
+  const [oauthReady, setOauthReady] = useState(false);
 
   // Refresh when switching tabs
   const handleTabChange = (tab: 'available' | 'checkedOut') => {
@@ -102,17 +103,17 @@ export default function InstrumentStatus({ initialInstruments }: InstrumentStatu
       const initOAuth = async () => {
         const { GoogleOAuthService } = await import('@/lib/google-oauth');
         await GoogleOAuthService.initialize();
-        loadInstrumentsFromSheets();
+        setOauthReady(true);
       };
       initOAuth();
     }
   }, []);
 
   useEffect(() => {
-    if (oauthInitialized) {
+    if (oauthReady) {
       loadInstrumentsFromSheets();
     }
-  }, [loadInstrumentsFromSheets, oauthInitialized]);
+  }, [loadInstrumentsFromSheets, oauthReady]);
 
   useEffect(() => {
     // Refresh data when window gets focus (tab switching back)
