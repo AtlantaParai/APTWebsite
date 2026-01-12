@@ -74,11 +74,10 @@ export class GoogleSignInService {
       localStorage.setItem('google_user', JSON.stringify(this.user));
       
       // Redirect to appropriate page based on user permissions
-      const basePath = process.env.NODE_ENV === 'production' ? '/APTWebsite' : '';
       
       // Use setTimeout to ensure redirect happens after OAuth popup closes
       setTimeout(() => {
-        window.location.href = `${basePath}/instruments`;
+        window.location.href = '/instruments';
       }, 100);
     } catch (error) {
       console.error('Failed to get user info:', error);
@@ -94,10 +93,8 @@ export class GoogleSignInService {
     const isStandalone = (navigator as any).standalone || window.matchMedia('(display-mode: standalone)').matches;
     
     if (isStandalone) {
-      // In standalone mode, redirect to regular browser for OAuth
-      const currentUrl = window.location.href;
-      const authUrl = `https://accounts.google.com/oauth/authorize?client_id=${this.CLIENT_ID}&redirect_uri=${encodeURIComponent(currentUrl)}&response_type=code&scope=${encodeURIComponent(this.SCOPES + ' openid email profile')}`;
-      window.location.href = authUrl;
+      // In standalone mode, show alert to open in Safari
+      alert('Please open this website in Safari browser to sign in. OAuth authentication is not supported in standalone mode.');
       return;
     }
     
@@ -114,8 +111,7 @@ export class GoogleSignInService {
     window.google?.accounts.id.disableAutoSelect();
     
     // Use the correct base path for GitHub Pages
-    const basePath = process.env.NODE_ENV === 'production' ? '/APTWebsite/' : '/';
-    window.location.href = basePath;
+    window.location.href = '/';
   }
 
   static getCurrentUser() {
