@@ -29,15 +29,17 @@ export default function Navigation() {
         <div className="flex justify-between items-center h-20">
           {/* Logo and Title */}
           <div className="flex items-center gap-4">
-            <img 
-              src={process.env.NODE_ENV === 'production' ? '/APTWebsite/images/ATPLogo.png' : '/images/ATPLogo.png'} 
-              alt="ATP Logo" 
-              className="h-16 w-16 object-contain rounded-full bg-blue-600 p-1" 
-            />
-            <div>
-              <h1 className="text-lg md:text-2xl font-bold text-white">Atlanta Parai Team</h1>
-              <p className="text-blue-100 text-xs md:text-sm">Preserving Tamil Culture</p>
-            </div>
+            <a href={process.env.NODE_ENV === 'production' ? '/APTWebsite/' : '/'} className="flex items-center gap-4">
+              <img 
+                src={process.env.NODE_ENV === 'production' ? '/APTWebsite/images/ATPLogo.png' : '/images/ATPLogo.png'} 
+                alt="ATP Logo" 
+                className="h-16 w-16 object-contain rounded-full bg-blue-600 p-1 cursor-pointer" 
+              />
+              <div>
+                <h1 className="text-lg md:text-2xl font-bold text-white">Atlanta Parai Team</h1>
+                <p className="text-blue-100 text-xs md:text-sm">Preserving Tamil Culture</p>
+              </div>
+            </a>
           </div>
           
           {/* User Info and Logout */}

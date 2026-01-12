@@ -2,6 +2,7 @@
 
 import InstrumentStatus from '@/components/InstrumentStatus';
 import Navigation from '@/components/Navigation';
+import Footer from '@/components/Footer';
 import { instruments } from '@/data/instruments';
 import { useAuth } from '@/contexts/AuthContext';
 import { isUserAuthorized } from '@/lib/auth';
@@ -24,9 +25,12 @@ export default function InstrumentsPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50">
+    <main className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 flex flex-col">
       <Navigation />
-      <InstrumentStatus initialInstruments={instruments} />
+      <div className="flex-1">
+        <InstrumentStatus initialInstruments={instruments} />
+      </div>
+      <Footer />
     </main>
   );
 }

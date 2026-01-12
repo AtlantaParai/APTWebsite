@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { GoogleSignInService } from '@/lib/google-signin';
 import { useAuth } from '@/contexts/AuthContext';
+import Footer from '@/components/Footer';
 
 export default function HomePage() {
   const router = useRouter();
@@ -203,6 +204,7 @@ export default function HomePage() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

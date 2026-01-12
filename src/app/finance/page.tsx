@@ -2,6 +2,7 @@
 
 import FinanceTracker from '@/components/FinanceTracker';
 import Navigation from '@/components/Navigation';
+import Footer from '@/components/Footer';
 import { useAuth } from '@/contexts/AuthContext';
 import { hasFinanceAccess } from '@/lib/auth';
 import Link from 'next/link';
@@ -38,9 +39,12 @@ export default function FinancePage() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50">
+    <main className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 flex flex-col">
       <Navigation />
-      <FinanceTracker />
+      <div className="flex-1">
+        <FinanceTracker />
+      </div>
+      <Footer />
     </main>
   );
 }

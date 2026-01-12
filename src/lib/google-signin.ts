@@ -75,13 +75,11 @@ export class GoogleSignInService {
       
       // Redirect to appropriate page based on user permissions
       const basePath = process.env.NODE_ENV === 'production' ? '/APTWebsite' : '';
-      const currentUrl = window.location.href;
-      const targetUrl = `${window.location.origin}${basePath}/instruments`;
       
-      console.log('Redirecting from:', currentUrl, 'to:', targetUrl);
-      
-      // Force a full page reload to ensure proper navigation
-      window.location.replace(targetUrl);
+      // Use setTimeout to ensure redirect happens after OAuth popup closes
+      setTimeout(() => {
+        window.location.href = `${basePath}/instruments`;
+      }, 100);
     } catch (error) {
       console.error('Failed to get user info:', error);
     }

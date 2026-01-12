@@ -25,6 +25,26 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [lastActivity, setLastActivity] = useState(Date.now());
+
+  // Auto-logout after 10 minutes of inactivity
+  useEffect(() => {
+    const updateActivity = () => setLastActivity(Date.now());
+    
+    const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'];
+    events.forEach(event => document.addEventListener(event, updateActivity, true));
+    
+    const checkInactivity = setInterval(() => {
+      if (user && Date.now() - lastActivity > 10 * 60 * 1000) { // 10 minutes
+        logout();
+      }
+    }, 60000); // Check every minute
+    
+    return () => {
+      events.forEach(event => document.removeEventListener(event, updateActivity, true));
+      clearInterval(checkInactivity);
+    };
+  }, [user, lastActivity]);
 
   useEffect(() => {
     const initializeAuth = async () => {
@@ -48,6 +68,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const logout = async () => {
     try {
+      setUser(null);
       GoogleSignInService.signOut();
     } catch (error) {
       console.error('Sign out error:', error);
