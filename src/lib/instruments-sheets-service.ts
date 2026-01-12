@@ -10,7 +10,7 @@ export interface InstrumentRecord {
 
 export class InstrumentsSheetsService {
   private static readonly SHEET_ID = process.env.NEXT_PUBLIC_INSTRUMENTS_SHEET_ID || '1your-sheet-id';
-  private static readonly SHEET_NAME = 'Sheet1';
+  private static readonly SHEET_NAME = 'instruments';
 
   static async getAllInstruments(accessToken: string): Promise<InstrumentRecord[]> {
     try {
