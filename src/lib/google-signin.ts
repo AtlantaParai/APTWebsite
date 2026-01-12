@@ -2,9 +2,6 @@ declare global {
   interface Window {
     google: any;
   }
-  interface Navigator {
-    standalone?: boolean;
-  }
 }
 
 export class GoogleSignInService {
@@ -94,7 +91,7 @@ export class GoogleSignInService {
     }
     
     // Check if running in standalone mode (iOS web app)
-    const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
+    const isStandalone = (navigator as any).standalone || window.matchMedia('(display-mode: standalone)').matches;
     
     if (isStandalone) {
       // In standalone mode, redirect to regular browser for OAuth
