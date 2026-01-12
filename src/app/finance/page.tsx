@@ -3,6 +3,7 @@
 import FinanceTracker from '@/components/FinanceTracker';
 import Navigation from '@/components/Navigation';
 import { useAuth } from '@/contexts/AuthContext';
+import { hasFinanceAccess } from '@/lib/auth';
 import Link from 'next/link';
 
 export default function FinancePage() {
@@ -16,7 +17,7 @@ export default function FinancePage() {
     );
   }
 
-  if (!user) {
+  if (!user || !hasFinanceAccess(user.email)) {
     return (
       <main className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 flex items-center justify-center">
         <div className="bg-white p-8 rounded-lg shadow-md text-center max-w-md">

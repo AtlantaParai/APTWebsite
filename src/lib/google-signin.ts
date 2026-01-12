@@ -57,6 +57,14 @@ export class GoogleSignInService {
       });
       const userInfo = await response.json();
       
+      // Check if user is authorized
+      const { isUserAuthorized } = await import('./auth');
+      if (!isUserAuthorized(userInfo.email)) {
+        alert('Access denied. You are not authorized to use this system.');
+        this.signOut();
+        return;
+      }
+      
       this.user = {
         email: userInfo.email,
         name: userInfo.name,
@@ -65,9 +73,17 @@ export class GoogleSignInService {
       
       localStorage.setItem('google_user', JSON.stringify(this.user));
       
-      // Redirect after getting user info
+      // Redirect to appropriate page based on user permissions
       const basePath = process.env.NODE_ENV === 'production' ? '/APTWebsite' : '';
-      window.location.href = `${basePath}/attendance`;
+      const { hasAttendanceAccess, hasFinanceAccess } = await import('./auth');
+      
+      if (hasAttendanceAccess(userInfo.email)) {
+        window.location.href = `${basePath}/attendance`;
+      } else if (hasFinanceAccess(userInfo.email)) {
+        window.location.href = `${basePath}/finance`;
+      } else {
+        window.location.href = `${basePath}/instruments`;
+      }
     } catch (error) {
       console.error('Failed to get user info:', error);
     }

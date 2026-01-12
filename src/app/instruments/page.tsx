@@ -4,6 +4,7 @@ import InstrumentStatus from '@/components/InstrumentStatus';
 import Navigation from '@/components/Navigation';
 import { instruments } from '@/data/instruments';
 import { useAuth } from '@/contexts/AuthContext';
+import { isUserAuthorized } from '@/lib/auth';
 
 export default function InstrumentsPage() {
   const { user, loading } = useAuth();
@@ -16,7 +17,7 @@ export default function InstrumentsPage() {
     );
   }
 
-  if (!user) {
+  if (!user || !isUserAuthorized(user.email)) {
     const basePath = process.env.NODE_ENV === 'production' ? '/APTWebsite' : '';
     window.location.href = basePath + '/';
     return null;
