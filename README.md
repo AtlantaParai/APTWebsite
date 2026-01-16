@@ -62,7 +62,7 @@ Create a collection called `instruments` with documents containing:
 2. Go to repository Settings > Pages
 3. Select "GitHub Actions" as source
 4. The workflow will automatically deploy on push to main branch
-5. Your site will be available at `https://yourusername.github.io/APTWebsite/`
+5. Your site will be available at `https://atlantaparai.github.io/`
 
 ### 5. Local Development
 
