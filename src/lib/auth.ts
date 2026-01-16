@@ -4,7 +4,7 @@ export const authorizedUsers = [
   'Divyaavino@gmail.com',
   'Bhuvanabuzzy@gmail.com',
   'sendabi@gmail.com',
-  'sapmasi@gmail.com',
+  'apt2025.finserv@gmail.com',
   'ramvijaianand@gmail.com',
   'Jeyaraj.L@gmail.com',
   'Amarjyotiangan@gmail.com',
@@ -20,14 +20,14 @@ export const attendanceUsers = [
   'Visha.chandy@gmail.com',
   'chandruxg@gmail.com',
   'Anbu.madhu@gmail.com',
-  'sapmasi@gmail.com'
+  'apt2025.finserv@gmail.com'
   // Add more emails here for users who should see attendance tab
 ];
 
 export const financeUsers = [
   'ayyapps4u@gmail.com',
   'ipan85@gmail.com',
-  'sapmasi@gmail.com',
+  'apt2025.finserv@gmail.com',
   'Jeyaraj.L@gmail.com',
   'Chitty.anand@gmail.com'
   // Add more emails here for users who should see finance tab

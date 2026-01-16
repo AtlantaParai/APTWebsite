@@ -42,6 +42,8 @@ export class FinanceSheetsService {
       const sheetId = this.getSheetId(data.section);
       const sheetName = this.getSheetName(data.section);
       
+      console.log(`Attempting to access sheet: ${sheetId}, sheet name: ${sheetName}`);
+      
       // Get all data to find the member's row
       const response = await fetch(
         `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${encodeURIComponent(sheetName)}`,
@@ -53,7 +55,9 @@ export class FinanceSheetsService {
       );
 
       if (!response.ok) {
-        throw new Error(`Failed to fetch data: ${response.status}`);
+        const errorText = await response.text();
+        console.error(`API Error: ${response.status} - ${errorText}`);
+        throw new Error(`Failed to fetch data: ${response.status} - ${errorText}`);
       }
 
       const sheetData = await response.json();
@@ -90,7 +94,9 @@ export class FinanceSheetsService {
       );
 
       if (!updateResponse.ok) {
-        throw new Error(`Failed to update payment status: ${updateResponse.status}`);
+        const errorText = await updateResponse.text();
+        console.error(`Update API Error: ${updateResponse.status} - ${errorText}`);
+        throw new Error(`Failed to update payment status: ${updateResponse.status} - ${errorText}`);
       }
 
       return await updateResponse.json();

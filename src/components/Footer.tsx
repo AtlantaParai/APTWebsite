@@ -21,7 +21,7 @@ export default function Footer() {
           
           <div className="flex items-center space-x-6">
             <a 
-              href="mailto:contact@atlantaparaiteam.com" 
+              href="mailto:atlantaparaiteam@gmail.com" 
               className="flex items-center text-gray-300 hover:text-white transition-colors"
             >
               <span className="mr-2">📧</span>

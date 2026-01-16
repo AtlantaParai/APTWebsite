@@ -53,7 +53,25 @@ export class GoogleOAuthService {
   static async getAccessToken(): Promise<string | null> {
     // First check if we have a valid token in memory or localStorage
     if (this.accessToken) {
-      return this.accessToken;
+      // Test if token is still valid by making a simple API call
+      try {
+        const testResponse = await fetch('https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=' + this.accessToken);
+        if (testResponse.ok) {
+          return this.accessToken;
+        } else {
+          // Token is invalid, clear it
+          this.accessToken = null;
+          if (typeof window !== 'undefined') {
+            localStorage.removeItem('google_access_token');
+          }
+        }
+      } catch (error) {
+        // Token validation failed, clear it
+        this.accessToken = null;
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('google_access_token');
+        }
+      }
     }
     
     // Try to restore from localStorage
