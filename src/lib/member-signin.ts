@@ -64,7 +64,7 @@ export class MemberSignInService {
         ...coreTeensKids
       ];
       
-      if (!allMembers.includes(userInfo.name)) {
+      if (!allMembers.some(member => member.toLowerCase() === userInfo.name.toLowerCase())) {
         alert('Access denied. You are not a registered member.');
         return;
       }

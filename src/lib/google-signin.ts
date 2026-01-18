@@ -31,24 +31,28 @@ export class GoogleSignInService {
   }
 
   private static setupSignIn() {
-    // Setup OAuth token client for Sheets access (includes user info)
+    // Setup OAuth token client for basic user info only
     this.tokenClient = window.google.accounts.oauth2.initTokenClient({
       client_id: this.CLIENT_ID,
-      scope: this.SCOPES + ' openid email profile',
+      scope: 'openid email profile',
       callback: (response: any) => {
+        console.log('OAuth callback received:', response);
         if (response.access_token) {
+          console.log('Access token received, getting user info');
           this.accessToken = response.access_token;
           localStorage.setItem('google_access_token', response.access_token);
-          localStorage.setItem('google_sheets_token', response.access_token);
           
           // Get user info from the access token
           this.getUserInfo(response.access_token);
+        } else {
+          console.log('No access token in response');
         }
       },
     });
   }
 
   private static async getUserInfo(accessToken: string) {
+    console.log('Getting user info with access token');
     try {
       const response = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
         headers: {
@@ -56,9 +60,11 @@ export class GoogleSignInService {
         }
       });
       const userInfo = await response.json();
+      console.log('User info received:', userInfo);
       
       // Check if user is authorized
       const { isUserAuthorized } = await import('./auth');
+      console.log('Admin login check:', { email: userInfo.email, authorized: isUserAuthorized(userInfo.email) });
       if (!isUserAuthorized(userInfo.email)) {
         alert('Access denied. You are not authorized to use this system.');
         this.signOut();
