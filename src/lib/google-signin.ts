@@ -36,6 +36,7 @@ export class GoogleSignInService {
       client_id: this.CLIENT_ID,
       scope: 'https://www.googleapis.com/auth/spreadsheets openid email profile',
       callback: (response: any) => {
+        console.log('=== OAuth callback START ===');
         console.log('OAuth callback received:', response);
         if (response.access_token) {
           console.log('Access token received, getting user info');
@@ -64,12 +65,20 @@ export class GoogleSignInService {
       
       // Check if user is authorized
       const { isUserAuthorized } = await import('./auth');
-      console.log('Admin login check:', { email: userInfo.email, authorized: isUserAuthorized(userInfo.email) });
-      if (!isUserAuthorized(userInfo.email)) {
+      const authorized = await isUserAuthorized(userInfo.email, accessToken);
+      console.log('Admin login check:', { email: userInfo.email, authorized });
+      
+      if (!authorized) {
+        console.log('ACCESS DENIED - User not authorized, signing out');
+        this.user = null;
+        this.accessToken = null;
+        localStorage.removeItem('google_user');
+        localStorage.removeItem('google_access_token');
         alert('Access denied. You are not authorized to use this system.');
-        this.signOut();
         return;
       }
+      
+      console.log('ACCESS GRANTED - Proceeding with login');
       
       this.user = {
         email: userInfo.email,

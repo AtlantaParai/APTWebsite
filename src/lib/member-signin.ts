@@ -51,21 +51,15 @@ export class MemberSignInService {
       });
       const userInfo = await response.json();
       
-      // Check if user is a valid member
-      const { adults2025 } = await import('@/data/2025Adults');
-      const { kidsTeens2025 } = await import('@/data/2025KidsTeens');
-      const { coreAdults } = await import('@/data/CoreAdults');
-      const { coreTeensKids } = await import('@/data/CoreTeensKids');
+      // Check if user is authorized via Google Sheet
+      const { isUserAuthorized } = await import('./auth');
+      const authorized = await isUserAuthorized(userInfo.email, accessToken);
       
-      const allMembers = [
-        ...adults2025,
-        ...kidsTeens2025,
-        ...coreAdults,
-        ...coreTeensKids
-      ];
-      
-      if (!allMembers.some(member => member.toLowerCase() === userInfo.name.toLowerCase())) {
-        alert('Access denied. You are not a registered member.');
+      if (!authorized) {
+        alert('Access denied. You are not authorized to use this system.');
+        localStorage.removeItem('google_user');
+        localStorage.removeItem('google_access_token');
+        localStorage.removeItem('google_sheets_token');
         return;
       }
       

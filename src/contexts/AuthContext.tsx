@@ -26,6 +26,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [lastActivity, setLastActivity] = useState(Date.now());
+  const [isAuthorized, setIsAuthorized] = useState(false);
 
   // Auto-logout after 10 minutes of inactivity
   useEffect(() => {
@@ -50,6 +51,40 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const initializeAuth = async () => {
       await GoogleSignInService.initialize();
       const currentUser = GoogleSignInService.getCurrentUser();
+      
+      if (currentUser?.email) {
+        const { GoogleOAuthService } = await import('@/lib/google-oauth');
+        const accessToken = await GoogleOAuthService.getAccessToken();
+        
+        if (accessToken) {
+          try {
+            const authorized = await isUserAuthorized(currentUser.email, accessToken);
+            setIsAuthorized(authorized);
+            
+            if (!authorized) {
+              console.log('User in localStorage is not authorized, signing out');
+              GoogleSignInService.signOut();
+              setUser(null);
+              setLoading(false);
+              return;
+            }
+          } catch (error) {
+            console.error('Authorization check failed, signing out:', error);
+            GoogleSignInService.signOut();
+            setUser(null);
+            setLoading(false);
+            return;
+          }
+        } else {
+          // No access token, sign out
+          console.log('No access token found, signing out');
+          GoogleSignInService.signOut();
+          setUser(null);
+          setLoading(false);
+          return;
+        }
+      }
+      
       setUser(currentUser);
       setLoading(false);
     };
@@ -69,13 +104,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const logout = async () => {
     try {
       setUser(null);
+      setIsAuthorized(false);
       GoogleSignInService.signOut();
     } catch (error) {
       console.error('Sign out error:', error);
     }
   };
-
-  const isAuthorized = isUserAuthorized(user?.email || null);
 
   return (
     <AuthContext.Provider value={{

@@ -6,11 +6,31 @@ import Footer from '@/components/Footer';
 import { useAuth } from '@/contexts/AuthContext';
 import { hasFinanceAccess } from '@/lib/auth';
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
 
 export default function FinancePage() {
-  const { user, loading, logout } = useAuth();
+  const { user, loading } = useAuth();
+  const [hasAccess, setHasAccess] = useState(false);
+  const [checkingAccess, setCheckingAccess] = useState(true);
 
-  if (loading) {
+  useEffect(() => {
+    const checkAccess = async () => {
+      if (user?.email) {
+        const { GoogleOAuthService } = await import('@/lib/google-oauth');
+        const accessToken = await GoogleOAuthService.getAccessToken();
+        if (accessToken) {
+          const access = await hasFinanceAccess(user.email, accessToken);
+          setHasAccess(access);
+        }
+      }
+      setCheckingAccess(false);
+    };
+    if (!loading) {
+      checkAccess();
+    }
+  }, [user, loading]);
+
+  if (loading || checkingAccess) {
     return (
       <main className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-500"></div>
@@ -18,7 +38,7 @@ export default function FinancePage() {
     );
   }
 
-  if (!user || !hasFinanceAccess(user.email)) {
+  if (!user || !hasAccess) {
     return (
       <main className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 flex items-center justify-center">
         <div className="bg-white p-8 rounded-lg shadow-md text-center max-w-md">

@@ -1,50 +1,56 @@
-export const authorizedUsers = [
-  'ayyapps85@gmail.com',
-  'ayyapps4u@gmail.com',
-  'ipan85@gmail.com',
-  'divyaavino@gmail.com',
-  'bhuvanabuzzy@gmail.com',
-  'sendabi@gmail.com',
-  'apt2025.finserv@gmail.com',
-  'ramvijaianand@gmail.com',
-  'jeyaraj.l@gmail.com',
-  'amarjyotiangan@gmail.com',
-  'dhaneshrajathurai@gmail.com',
-  'anbu.madhu@gmail.com',
-  'chandruxg@gmail.com',
-  'visha.chandy@gmail.com',
-  'fullbellyvrc@gmail.com'
-];
+import { MembersSheetsService } from './members-sheets-service';
 
-export const attendanceUsers = [
-  'ipan85@gmail.com',
-  'visha.chandy@gmail.com',
-  'chandruxg@gmail.com',
-  'anbu.madhu@gmail.com',
-  'apt2025.finserv@gmail.com'
-  // Add more emails here for users who should see attendance tab
-];
-
-export const financeUsers = [
-  'ayyapps4u@gmail.com',
-  'ipan85@gmail.com',
-  'apt2025.finserv@gmail.com',
-  'jeyaraj.l@gmail.com',
-  'chitty.anand@gmail.com'
-  // Add more emails here for users who should see finance tab
-];
-
-export const isUserAuthorized = (email: string | null): boolean => {
+export const isUserAuthorized = async (email: string | null, accessToken?: string): Promise<boolean> => {
   if (!email) return false;
-  return authorizedUsers.includes(email.toLowerCase());
+  
+  console.log('Checking authorization for:', email);
+  
+  if (!accessToken) {
+    console.warn('No access token available for authorization check');
+    return false;
+  }
+  
+  try {
+    const emails = await MembersSheetsService.getAuthorizedEmails(accessToken);
+    const isAuthorized = emails.includes(email.toLowerCase());
+    console.log('Authorization result:', { email, isAuthorized, availableEmails: emails });
+    return isAuthorized;
+  } catch (error) {
+    console.error('Failed to fetch authorized users from sheet:', error);
+    return false;
+  }
 };
 
-export const hasAttendanceAccess = (email: string | null): boolean => {
+export const hasAttendanceAccess = async (email: string | null, accessToken?: string): Promise<boolean> => {
   if (!email) return false;
-  return attendanceUsers.includes(email.toLowerCase());
+  
+  if (!accessToken) {
+    console.warn('No access token for attendance check');
+    return false;
+  }
+  
+  try {
+    const permissions = await MembersSheetsService.getMemberPermissions(accessToken);
+    return permissions.attendanceEmails.includes(email.toLowerCase());
+  } catch (error) {
+    console.error('Failed to check attendance access:', error);
+    return false;
+  }
 };
 
-export const hasFinanceAccess = (email: string | null): boolean => {
+export const hasFinanceAccess = async (email: string | null, accessToken?: string): Promise<boolean> => {
   if (!email) return false;
-  return financeUsers.includes(email.toLowerCase());
+  
+  if (!accessToken) {
+    console.warn('No access token for finance check');
+    return false;
+  }
+  
+  try {
+    const permissions = await MembersSheetsService.getMemberPermissions(accessToken);
+    return permissions.financeEmails.includes(email.toLowerCase());
+  } catch (error) {
+    console.error('Failed to check finance access:', error);
+    return false;
+  }
 };

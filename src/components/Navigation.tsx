@@ -4,16 +4,35 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { hasAttendanceAccess, hasFinanceAccess } from '@/lib/auth';
+import { useState, useEffect } from 'react';
 
 export default function Navigation() {
   const pathname = usePathname();
   const { user, logout } = useAuth();
+  const [showAttendance, setShowAttendance] = useState(false);
+  const [showFinance, setShowFinance] = useState(false);
+
+  useEffect(() => {
+    const checkAccess = async () => {
+      if (user?.email) {
+        const { GoogleOAuthService } = await import('@/lib/google-oauth');
+        const accessToken = await GoogleOAuthService.getAccessToken();
+        if (accessToken) {
+          const attendance = await hasAttendanceAccess(user.email, accessToken);
+          const finance = await hasFinanceAccess(user.email, accessToken);
+          setShowAttendance(attendance);
+          setShowFinance(finance);
+        }
+      }
+    };
+    checkAccess();
+  }, [user]);
 
   const navItems = [
     ...(user ? [{ name: 'Member Info', path: '/member-info' }] : []),
     { name: 'Instruments', path: '/instruments' },
-    ...(hasAttendanceAccess(user?.email || null) ? [{ name: 'Attendance', path: '/attendance' }] : []),
-    ...(hasFinanceAccess(user?.email || null) ? [{ name: 'Finance', path: '/finance' }] : [])
+    ...(showAttendance ? [{ name: 'Attendance', path: '/attendance' }] : []),
+    ...(showFinance ? [{ name: 'Finance', path: '/finance' }] : [])
   ];
 
   const isActive = (itemPath: string) => {
