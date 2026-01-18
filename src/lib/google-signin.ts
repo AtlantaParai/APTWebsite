@@ -131,7 +131,7 @@ export class GoogleSignInService {
     window.google?.accounts.id.disableAutoSelect();
     
     // Redirect to home page
-    window.location.href = 'https://atlantaparai.github.io';
+    window.location.href = '/';
   }
 
   static getCurrentUser() {
