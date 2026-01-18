@@ -397,7 +397,7 @@ export default function InstrumentStatus({ initialInstruments }: InstrumentStatu
       </div>
 
       {selectedInstrument && (
-        <div className="fixed inset-0 flex items-center justify-center z-50">
+        <div className="fixed inset-0 flex items-start justify-center pt-20 z-50">
           <div 
             className="absolute inset-0 bg-black bg-opacity-50 transition-opacity duration-300"
             onClick={() => {
