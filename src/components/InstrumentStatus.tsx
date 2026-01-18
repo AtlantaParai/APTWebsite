@@ -336,7 +336,7 @@ export default function InstrumentStatus({ initialInstruments }: InstrumentStatu
         </div>
       )}
 
-      <div className="relative">
+      <div className="relative min-h-[600px]">
         <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2">
         {(activeTab === 'available' ? availableInstruments : checkedOutInstruments).map((instrument) => (
           <div key={instrument.id} className="bg-white rounded-lg shadow-lg overflow-hidden relative">
