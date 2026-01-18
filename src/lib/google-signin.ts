@@ -130,8 +130,9 @@ export class GoogleSignInService {
     localStorage.removeItem('google_sheets_token');
     window.google?.accounts.id.disableAutoSelect();
     
-    // Redirect to home page
-    window.location.href = '/';
+    // Redirect based on environment
+    const isLocal = window.location.hostname === 'localhost';
+    window.location.href = isLocal ? 'http://localhost:3000' : 'https://atlantaparai.github.io';
   }
 
   static getCurrentUser() {
