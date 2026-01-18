@@ -273,7 +273,7 @@ export default function InstrumentStatus({ initialInstruments }: InstrumentStatu
   };
 
   return (
-    <div className="max-w-6xl mx-auto p-4">
+    <div className="max-w-6xl mx-auto p-4 relative">
       {loading && (
         <div className="text-center mb-2">
           <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
@@ -336,7 +336,8 @@ export default function InstrumentStatus({ initialInstruments }: InstrumentStatu
         </div>
       )}
 
-      <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2">
+      <div className="relative">
+        <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2">
         {(activeTab === 'available' ? availableInstruments : checkedOutInstruments).map((instrument) => (
           <div key={instrument.id} className="bg-white rounded-lg shadow-lg overflow-hidden relative">
             <div className="relative">
@@ -394,53 +395,66 @@ export default function InstrumentStatus({ initialInstruments }: InstrumentStatu
             </div>
           </div>
         ))}
-      </div>
+        </div>
 
-      {selectedInstrument && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-lg p-4 w-80 max-h-80">
-            <div className="flex justify-between items-center mb-3">
-              <h2 className="text-lg font-bold">Check Out: {selectedInstrument.name}</h2>
-              <button
-                onClick={() => {
-                  setSelectedInstrument(null);
-                  setSearchQuery('');
-                  setFilteredMembers([]);
-                  window.location.reload();
-                }}
-                className="bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs hover:bg-red-600"
-              >
-                ×
-              </button>
-            </div>
+        {selectedInstrument && (
+          <div className="absolute inset-0">
+            {/* Backdrop */}
+            <div 
+              className="absolute inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300"
+              onClick={() => {
+                setSelectedInstrument(null);
+                setSearchQuery('');
+                setFilteredMembers([]);
+              }}
+            ></div>
             
-            <input
-              type="text"
-              placeholder="Search member name..."
-              value={searchQuery}
-              onChange={(e) => handleSearchChange(e.target.value)}
-              className="w-full p-2 border-2 border-blue-500 rounded-lg mb-3 bg-blue-50 text-sm"
-              style={{ fontSize: '16px' }}
-              autoFocus
-            />
-            
-            <div className="max-h-40 overflow-y-auto">
-              {filteredMembers.map((member) => (
+            {/* Slide-in panel */}
+            <div className="absolute top-0 right-0 h-full w-80 bg-white shadow-lg z-50 transform transition-transform duration-300 ease-out animate-slide-in">
+            <div className="p-4 h-full flex flex-col">
+              <div className="flex justify-between items-center mb-3">
+                <h2 className="text-lg font-bold">Check Out: {selectedInstrument.name}</h2>
                 <button
-                  key={member.id}
-                  onClick={() => handleCheckout(member)}
-                  className="w-full flex items-center p-2 hover:bg-gray-100 rounded-lg border-b border-gray-200 text-sm"
+                  onClick={() => {
+                    setSelectedInstrument(null);
+                    setSearchQuery('');
+                    setFilteredMembers([]);
+                  }}
+                  className="bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs hover:bg-red-600"
                 >
-                  <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center mr-2 text-xs font-bold">
-                    {member.name.charAt(0)}
-                  </div>
-                  <span className="text-gray-800">{member.name}</span>
+                  ×
                 </button>
-              ))}
+              </div>
+              
+              <input
+                type="text"
+                placeholder="Search member name..."
+                value={searchQuery}
+                onChange={(e) => handleSearchChange(e.target.value)}
+                className="w-full p-2 border-2 border-blue-500 rounded-lg mb-3 bg-blue-50 text-sm"
+                style={{ fontSize: '16px' }}
+                autoFocus
+              />
+              
+              <div className="flex-1 overflow-y-auto">
+                {filteredMembers.map((member) => (
+                  <button
+                    key={member.id}
+                    onClick={() => handleCheckout(member)}
+                    className="w-full flex items-center p-2 hover:bg-gray-100 rounded-lg border-b border-gray-200 text-sm"
+                  >
+                    <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center mr-2 text-xs font-bold">
+                      {member.name.charAt(0)}
+                    </div>
+                    <span className="text-gray-800">{member.name}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
