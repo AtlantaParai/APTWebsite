@@ -420,6 +420,7 @@ export default function InstrumentStatus({ initialInstruments }: InstrumentStatu
               value={searchQuery}
               onChange={(e) => handleSearchChange(e.target.value)}
               className="w-full p-2 border-2 border-blue-500 rounded-lg mb-3 bg-blue-50 text-sm"
+              style={{ fontSize: '16px' }}
               autoFocus
             />
             

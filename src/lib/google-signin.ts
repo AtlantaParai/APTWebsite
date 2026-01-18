@@ -31,10 +31,10 @@ export class GoogleSignInService {
   }
 
   private static setupSignIn() {
-    // Setup OAuth token client for basic user info only
+    // Setup OAuth token client for basic user info and Sheets access
     this.tokenClient = window.google.accounts.oauth2.initTokenClient({
       client_id: this.CLIENT_ID,
-      scope: 'openid email profile',
+      scope: 'https://www.googleapis.com/auth/spreadsheets openid email profile',
       callback: (response: any) => {
         console.log('OAuth callback received:', response);
         if (response.access_token) {
@@ -130,8 +130,8 @@ export class GoogleSignInService {
     localStorage.removeItem('google_sheets_token');
     window.google?.accounts.id.disableAutoSelect();
     
-    // Use the correct base path for GitHub Pages
-    window.location.href = '/';
+    // Redirect to home page
+    window.location.href = 'https://atlantaparai.github.io';
   }
 
   static getCurrentUser() {
