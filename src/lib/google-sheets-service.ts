@@ -7,13 +7,15 @@ export class GoogleSheetsService {
     memberName: string;
     status: string;
     recordedBy: string;
+    timestamp?: string;
   }, accessToken: string) {
     const values = [[
       data.date,
       data.section,
       data.memberName,
       data.status,
-      data.recordedBy
+      data.recordedBy,
+      data.timestamp || new Date().toISOString()
     ]];
 
     const response = await fetch(

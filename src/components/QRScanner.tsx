@@ -16,6 +16,7 @@ export default function QRScanner() {
   const [scanResult, setScanResult] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const [hasScanned, setHasScanned] = useState(false);
+  const [cooldownTimer, setCooldownTimer] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
   const codeReader = useRef<any>(null);
   const { user } = useAuth();
@@ -70,9 +71,12 @@ export default function QRScanner() {
     setShowScanner(false);
     setScanResult('');
     setHasScanned(false);
+    setCooldownTimer(0);
   };
 
   const handleScanResult = async (data: string) => {
+    if (cooldownTimer > 0) return;
+    
     try {
       const memberData = JSON.parse(data);
       if (!memberData.name || !memberData.batch) {
@@ -80,14 +84,28 @@ export default function QRScanner() {
         return;
       }
       
+      setHasScanned(true);
+      
+      // Stop camera immediately
+      if (codeReader.current) {
+        codeReader.current.reset();
+      }
+      
       setScanResult(`Scanned: ${memberData.name} (${memberData.batch})`);
       await markAttendance(memberData.name, memberData.batch);
       
-      // Reset hasScanned after 2 seconds to allow next scan
-      setTimeout(() => {
-        setHasScanned(false);
-        setScanResult('Camera ready - point at next QR code');
-      }, 2000);
+      // Start 10 second countdown
+      setCooldownTimer(10);
+      const interval = setInterval(() => {
+        setCooldownTimer(prev => {
+          if (prev <= 1) {
+            clearInterval(interval);
+            stopScanner();
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
     } catch (error) {
       setScanResult('❌ Invalid QR code format');
     }
@@ -110,7 +128,8 @@ export default function QRScanner() {
         section: batch,
         memberName: memberName,
         status: 'present',
-        recordedBy: `QR Scan by ${user.email || 'Unknown'}`
+        recordedBy: `QR Scan by ${user.email || 'Unknown'}`,
+        timestamp: new Date().toISOString()
       }, accessToken);
 
       setScanResult(`✅ ${memberName} marked present!`);
@@ -148,6 +167,14 @@ export default function QRScanner() {
             </div>
             
             <div className="relative">
+              {cooldownTimer > 0 && (
+                <div className="absolute inset-0 bg-black bg-opacity-75 flex items-center justify-center rounded-lg z-10">
+                  <div className="text-center">
+                    <div className="text-white text-6xl font-bold mb-2">{cooldownTimer}</div>
+                    <div className="text-white text-sm">Closing scanner...</div>
+                  </div>
+                </div>
+              )}
               <video
                 ref={videoRef}
                 className="w-full rounded-lg"
