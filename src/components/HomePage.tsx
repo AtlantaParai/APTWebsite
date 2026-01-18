@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { GoogleSignInService } from '@/lib/google-signin';
+import { MemberSignInService } from '@/lib/member-signin';
 import { useAuth } from '@/contexts/AuthContext';
 import Footer from '@/components/Footer';
 
@@ -33,6 +34,7 @@ export default function HomePage() {
 
   useEffect(() => {
     GoogleSignInService.initialize();
+    MemberSignInService.initialize();
   }, []);
 
   useEffect(() => {
@@ -53,14 +55,30 @@ export default function HomePage() {
     setCurrentImageIndex((prev) => (prev - 1 + heroImages.length) % heroImages.length);
   };
 
-  const handleConnectToSheets = async () => {
+  const handleAdminLogin = async () => {
     setIsSigningIn(true);
     try {
+      console.log('Starting Google Sign-in...');
+      
+      if (!window.google?.accounts) {
+        console.log('Google accounts not loaded, initializing...');
+        await GoogleSignInService.initialize();
+      }
+      
       await GoogleSignInService.signIn();
-      // Sign-in service will handle redirect to attendance tab
     } catch (error) {
       console.error('Sign in failed:', error);
+      alert('Sign-in failed. Please make sure popups are enabled and try again.');
       setIsSigningIn(false);
+    }
+  };
+
+  const handleMemberLogin = async () => {
+    try {
+      await MemberSignInService.signIn();
+    } catch (error) {
+      console.error('Member sign in failed:', error);
+      alert('Sign-in failed. Please try again.');
     }
   };
 
@@ -83,13 +101,21 @@ export default function HomePage() {
                 <p className="text-blue-100 text-sm md:text-lg">Preserving Tamil Culture Through Music</p>
               </div>
             </div>
-            <button
-              onClick={handleConnectToSheets}
-              disabled={isSigningIn}
-              className="bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-2 md:px-4 py-2 rounded-lg font-medium transition-colors disabled:opacity-50 text-xs md:text-sm"
-            >
-              {isSigningIn ? 'Connecting...' : 'Admin Login'}
-            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={handleAdminLogin}
+                disabled={isSigningIn}
+                className="bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-2 md:px-4 py-2 rounded-lg font-medium transition-colors disabled:opacity-50 text-xs md:text-sm"
+              >
+                {isSigningIn ? 'Connecting...' : 'Admin Login'}
+              </button>
+              <button
+                onClick={handleMemberLogin}
+                className="bg-green-500 bg-opacity-80 hover:bg-opacity-100 text-white px-2 md:px-4 py-2 rounded-lg font-medium transition-colors text-xs md:text-sm"
+              >
+                Member Login
+              </button>
+            </div>
           </div>
         </div>
       </div>

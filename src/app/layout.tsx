@@ -14,6 +14,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <script src="https://unpkg.com/@zxing/library@latest"></script>
+      </head>
       <body>
         <AuthProvider>
           {children}

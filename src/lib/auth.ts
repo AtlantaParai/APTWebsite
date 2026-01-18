@@ -1,25 +1,25 @@
 export const authorizedUsers = [
   'ayyapps4u@gmail.com',
   'ipan85@gmail.com',
-  'Divyaavino@gmail.com',
-  'Bhuvanabuzzy@gmail.com',
+  'divyaavino@gmail.com',
+  'bhuvanabuzzy@gmail.com',
   'sendabi@gmail.com',
   'apt2025.finserv@gmail.com',
   'ramvijaianand@gmail.com',
-  'Jeyaraj.L@gmail.com',
-  'Amarjyotiangan@gmail.com',
+  'jeyaraj.l@gmail.com',
+  'amarjyotiangan@gmail.com',
   'dhaneshrajathurai@gmail.com',
-  'Anbu.madhu@gmail.com',
+  'anbu.madhu@gmail.com',
   'chandruxg@gmail.com',
-  'Visha.chandy@gmail.com',
+  'visha.chandy@gmail.com',
   'fullbellyvrc@gmail.com'
 ];
 
 export const attendanceUsers = [
   'ipan85@gmail.com',
-  'Visha.chandy@gmail.com',
+  'visha.chandy@gmail.com',
   'chandruxg@gmail.com',
-  'Anbu.madhu@gmail.com',
+  'anbu.madhu@gmail.com',
   'apt2025.finserv@gmail.com'
   // Add more emails here for users who should see attendance tab
 ];
@@ -28,8 +28,8 @@ export const financeUsers = [
   'ayyapps4u@gmail.com',
   'ipan85@gmail.com',
   'apt2025.finserv@gmail.com',
-  'Jeyaraj.L@gmail.com',
-  'Chitty.anand@gmail.com'
+  'jeyaraj.l@gmail.com',
+  'chitty.anand@gmail.com'
   // Add more emails here for users who should see finance tab
 ];
 

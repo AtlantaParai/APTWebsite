@@ -8,6 +8,7 @@ import { adults2025 } from '@/data/2025Adults';
 import { kidsTeens2025 } from '@/data/2025KidsTeens';
 import { coreAdults } from '@/data/CoreAdults';
 import { coreTeensKids } from '@/data/CoreTeensKids';
+import QRScanner from '@/components/QRScanner';
 
 interface Member {
   id: string;
@@ -420,6 +421,7 @@ export default function AttendanceTracker() {
             <span className="text-red-600 font-semibold">Absent: {counts.absent}</span>
           </div>
           <div className="flex items-center gap-2">
+            <QRScanner />
             <button
               onClick={generateAbsenceReport}
               className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg transition-colors text-sm"

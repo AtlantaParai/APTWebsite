@@ -85,16 +85,32 @@ export class GoogleSignInService {
   }
 
   static async signIn() {
+    console.log('SignIn called');
+    
     if (!window.google?.accounts) {
+      console.log('Google accounts not available, initializing...');
       await this.initialize();
+    }
+    
+    if (!this.CLIENT_ID) {
+      alert('Google Client ID not configured. Please check environment variables.');
+      return;
     }
     
     // Check if running in standalone mode (iOS web app)
     const isStandalone = (navigator as any).standalone || window.matchMedia('(display-mode: standalone)').matches;
     
     if (isStandalone) {
-      // In standalone mode, show alert to open in Safari
       alert('Please open this website in Safari browser to sign in. OAuth authentication is not supported in standalone mode.');
+      return;
+    }
+    
+    console.log('Requesting access token...');
+    
+    // Check if tokenClient is available
+    if (!this.tokenClient) {
+      console.error('Token client not initialized');
+      alert('Authentication system not ready. Please refresh the page and try again.');
       return;
     }
     
