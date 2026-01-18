@@ -15,6 +15,7 @@ export default function QRScanner() {
   const [showScanner, setShowScanner] = useState(false);
   const [scanResult, setScanResult] = useState<string>('');
   const [loading, setLoading] = useState(false);
+  const [hasScanned, setHasScanned] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const codeReader = useRef<any>(null);
   const { user } = useAuth();
@@ -29,6 +30,7 @@ export default function QRScanner() {
     console.log('Start scanner clicked');
     setShowScanner(true);
     setScanResult('Initializing camera...');
+    setHasScanned(false);
     
     // Wait for modal to render
     setTimeout(async () => {
@@ -44,7 +46,8 @@ export default function QRScanner() {
           undefined,
           videoRef.current,
           (result: any, error: any) => {
-            if (result) {
+            if (result && !hasScanned) {
+              setHasScanned(true);
               console.log('QR Code scanned:', result.text);
               handleScanResult(result.text);
             }
@@ -66,6 +69,7 @@ export default function QRScanner() {
     }
     setShowScanner(false);
     setScanResult('');
+    setHasScanned(false);
   };
 
   const handleScanResult = async (data: string) => {

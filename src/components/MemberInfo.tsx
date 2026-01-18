@@ -21,7 +21,7 @@ export default function MemberInfo() {
 
   useEffect(() => {
     if (user?.name) {
-      const member = allMembers.find(m => m.name === user.name);
+      const member = allMembers.find(m => m.name.toLowerCase() === user.name.toLowerCase());
       if (member) {
         generateQRCode(member);
       }
@@ -49,7 +49,7 @@ export default function MemberInfo() {
     }
   };
 
-  const member = allMembers.find(m => m.name === user?.name);
+  const member = allMembers.find(m => m.name.toLowerCase() === user?.name?.toLowerCase());
 
   if (!member) {
     return (
@@ -66,10 +66,12 @@ export default function MemberInfo() {
         <p className="text-gray-600 mb-4">{member.batch}</p>
         
         {qrCode ? (
-          <img
-            src={qrCode}
-            alt={`QR Code for ${member.name}`}
-          />
+          <div className="flex justify-center">
+            <img
+              src={qrCode}
+              alt={`QR Code for ${member.name}`}
+            />
+          </div>
         ) : (
           <div className="flex items-center justify-center h-48">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-500"></div>

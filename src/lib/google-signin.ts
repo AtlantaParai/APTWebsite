@@ -77,7 +77,7 @@ export class GoogleSignInService {
       
       // Use setTimeout to ensure redirect happens after OAuth popup closes
       setTimeout(() => {
-        window.location.href = '/instruments';
+        window.location.href = '/member-info';
       }, 100);
     } catch (error) {
       console.error('Failed to get user info:', error);
