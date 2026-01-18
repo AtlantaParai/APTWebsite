@@ -10,6 +10,7 @@ export default function Navigation() {
   const { user, logout } = useAuth();
 
   const navItems = [
+    ...(user ? [{ name: 'Member Info', path: '/member-info', icon: '👤' }] : []),
     { name: 'Instruments', path: '/instruments', icon: '🎵' },
     ...(hasAttendanceAccess(user?.email || null) ? [{ name: 'Attendance', path: '/attendance', icon: '📋' }] : []),
     ...(hasFinanceAccess(user?.email || null) ? [{ name: 'Finance', path: '/finance', icon: '💰' }] : [])
