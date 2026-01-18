@@ -336,8 +336,7 @@ export default function InstrumentStatus({ initialInstruments }: InstrumentStatu
         </div>
       )}
 
-      <div className="relative min-h-[600px]">
-        <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2">
+      <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2">
         {(activeTab === 'available' ? availableInstruments : checkedOutInstruments).map((instrument) => (
           <div key={instrument.id} className="bg-white rounded-lg shadow-lg overflow-hidden relative">
             <div className="relative">
@@ -395,23 +394,21 @@ export default function InstrumentStatus({ initialInstruments }: InstrumentStatu
             </div>
           </div>
         ))}
-        </div>
+      </div>
 
-        {selectedInstrument && (
-          <div className="absolute inset-0">
-            {/* Backdrop */}
-            <div 
-              className="absolute inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300"
-              onClick={() => {
-                setSelectedInstrument(null);
-                setSearchQuery('');
-                setFilteredMembers([]);
-              }}
-            ></div>
-            
-            {/* Slide-in panel */}
-            <div className="absolute top-0 right-0 h-full w-80 bg-white shadow-lg z-50 transform transition-transform duration-300 ease-out animate-slide-in">
-            <div className="p-4 h-full flex flex-col">
+      {selectedInstrument && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div 
+            className="absolute inset-0 bg-black bg-opacity-50 transition-opacity duration-300"
+            onClick={() => {
+              setSelectedInstrument(null);
+              setSearchQuery('');
+              setFilteredMembers([]);
+            }}
+          ></div>
+          
+          <div className="relative bg-white rounded-lg shadow-2xl w-80 max-h-[80vh] flex flex-col animate-pop-in">
+            <div className="p-4 border-b">
               <div className="flex justify-between items-center mb-3">
                 <h2 className="text-lg font-bold">Check Out: {selectedInstrument.name}</h2>
                 <button
@@ -435,8 +432,9 @@ export default function InstrumentStatus({ initialInstruments }: InstrumentStatu
                 style={{ fontSize: '16px' }}
                 autoFocus
               />
+            </div>
               
-              <div className="flex-1 overflow-y-auto">
+            <div className="flex-1 overflow-y-auto p-4">
                 {filteredMembers.map((member) => (
                   <button
                     key={member.id}
@@ -449,12 +447,10 @@ export default function InstrumentStatus({ initialInstruments }: InstrumentStatu
                     <span className="text-gray-800">{member.name}</span>
                   </button>
                 ))}
-              </div>
-            </div>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
