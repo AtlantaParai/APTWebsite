@@ -415,28 +415,24 @@ export default function AttendanceTracker() {
 
       {/* Counts and Buttons */}
       <div className="bg-white rounded-lg shadow-lg p-2 mb-2">
-        <div className="flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <QRScanner />
-            <button
-              onClick={generateAbsenceReport}
-              className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg transition-colors text-sm"
-            >
-              📊 Absence Report
-            </button>
+        <div className="flex items-center gap-2 whitespace-nowrap">
+          <QRScanner />
+          <button
+            onClick={generateAbsenceReport}
+            className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg transition-colors text-sm"
+          >
+            📊 Absence Report
+          </button>
+          <div className="flex gap-4 ml-4">
+            <span className="text-green-600 font-semibold">Present: {counts.present}</span>
+            <span className="text-red-600 font-semibold">Absent: {counts.absent}</span>
           </div>
-          <div className="flex items-center gap-4">
-            <div className="flex gap-4">
-              <span className="text-green-600 font-semibold">Present: {counts.present}</span>
-              <span className="text-red-600 font-semibold">Absent: {counts.absent}</span>
-            </div>
-            <button
-              onClick={resetAttendance}
-              className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded-lg transition-colors text-sm"
-            >
-              🔄 Reset
-            </button>
-          </div>
+          <button
+            onClick={resetAttendance}
+            className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded-lg transition-colors text-sm ml-2"
+          >
+            🔄 Reset
+          </button>
         </div>
       </div>
 

@@ -73,8 +73,10 @@ export class GoogleSignInService {
       
       localStorage.setItem('google_user', JSON.stringify(this.user));
       
-      // Trigger a page reload to update AuthContext
-      window.location.reload();
+      // Redirect to member-info page after successful login
+      setTimeout(() => {
+        window.location.href = '/member-info';
+      }, 500);
     } catch (error) {
       console.error('Failed to get user info:', error);
     }
